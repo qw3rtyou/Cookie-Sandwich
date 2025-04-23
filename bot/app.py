@@ -25,15 +25,16 @@ def bot():
     payload = request.args.get("payload", "")
 
     login_url = f"http://tomcat:8080/login.jsp?username=admin&password={ADMIN_PASSWORD}"
+    print(ADMIN_PASSWORD)
     driver.get(login_url)
 
-    # print(driver.get_cookies())
+    print(driver.get_cookies())
 
     encoded = quote(payload, safe='')
     xss_url = f"http://tomcat:8080/xss.jsp?payload={encoded}"
     driver.get(xss_url)
     
-    # print(driver.get_cookies())
+    print(driver.get_cookies())
 
     ok = driver.current_url.startswith("http://tomcat:8080/xss.jsp")
     status = 200 if ok else 500

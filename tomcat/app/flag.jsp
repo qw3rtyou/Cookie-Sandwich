@@ -1,15 +1,16 @@
 <%@ page import="javax.servlet.http.*" %>
 <%
+    String flag = System.getenv("FLAG");
     HttpSession sess = request.getSession(false);
-    Boolean isAdmin = (sess != null) 
-                     ? (Boolean)sess.getAttribute("isAdmin") 
-                     : false;
-    if (!Boolean.TRUE.equals(isAdmin)) {
+    boolean isAdmin = (sess != null) 
+                    && Boolean.TRUE.equals(sess.getAttribute("isAdmin"));
+
+    if (!isAdmin) {
         response.sendError(403, "Forbidden");
         return;
     }
 %>
 <html><body>
   <h1>GG</h1>
-  <pre>CTF{you_stole_an_HttpOnly_cookie!}</pre>
+  <pre><%= flag %></pre>
 </body></html>
