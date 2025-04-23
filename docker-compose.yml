@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  tomcat:
+    build: 
+      context: ./tomcat
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./tomcat/app:/usr/local/tomcat/webapps/ROOT
+    environment:
+      - CATALINA_OPTS=-Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE=false 
+    networks:
+      - internal 
+
+
+  bot:
+    image: tonyp7/flask-selenium-chromedriver-alpine:latest
+    shm_size: '2gb'
+    build: 
+      context: ./bot
+      dockerfile: Dockerfile
+    depends_on:
+      - tomcat
+    networks:
+      - internal
+    ports:
+      - "8000:8000"
+    environment:
+      - ADMIN_PASSWORD=password
+      - GUNICORN_CMD_ARGS=--workers=1 --timeout=120
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+networks:
+  internal:
+    driver: bridge
